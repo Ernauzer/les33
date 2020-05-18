@@ -53,7 +53,6 @@ const Student = class extends User { //eslint-disable-line
     }
 
     get getAverageAttendance() {
-
         let index = 0,
             visit = 0;
         this.visit.forEach(attendance => {
