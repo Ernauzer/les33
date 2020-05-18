@@ -1,6 +1,7 @@
 'use strict';
 
 class User {
+
     constructor(name, surname, bYear) {
         this.name = name;
         this.surname = surname;
@@ -27,43 +28,58 @@ const Student = class extends User { //eslint-disable-line
 
         this.raiting = [];
         this.raiting.length = 30;
-        const raitingIndex = () => this.raiting.findIndex(index => typeof index === 'undefined');
 
         this.visit = [];
         this.visit.length = 30;
-        const visitIndex = () => this.visit.findIndex(index => typeof index === 'undefined');
+    }
 
-        this.present = () => (this.visit[visitIndex()] = true);
-        this.absent = () => (this.visit[visitIndex()] = false);
-        this.mark = mark => (this.raiting[raitingIndex()] = mark);
+    static findIndex(item) {
+        return item.findIndex(index => typeof index === 'undefined');
+    }
 
-        this.getAverageAttendance = () => {
-            let index = 0,
-                visit = 0;
-            this.visit.forEach(attendance => {
-                if (attendance === true) {
-                    visit++;
-                    index++;
-                } else if (attendance === false) {
-                    index++;
-                }
-            });
-            return visit / index;
-        };
+    mark(mark) {
+        const index = Student.findIndex(this.raiting);
+        this.raiting[index] = mark;
+    }
 
-        this.getAverageRaiting = () => {
-            let index = 0,
-                value = 0;
-            this.raiting.forEach(mark => {
-                if (mark) {
-                    value += mark;
-                    index++;
-                }
-            });
-            return value / index;
-        };
+    get present() {
+        const index = Student.findIndex(this.visit);
+        return this.visit[index] = true;
+    }
+
+    get absent() {
+        const index = Student.findIndex(this.visit);
+        return this.visit[index] = false;
+    }
+
+    get getAverageAttendance() {
+
+        let index = 0,
+            visit = 0;
+        this.visit.forEach(attendance => {
+            if (attendance === true) {
+                visit++;
+                index++;
+            } else if (attendance === false) {
+                index++;
+            }
+        });
+        return visit / index;
+    }
+
+    get getAverageRaiting() {
+        let index = 0,
+            value = 0;
+        this.raiting.forEach(mark => {
+            if (mark) {
+                value += mark;
+                index++;
+            }
+        });
+        return value / index;
     }
 };
+
 
 const Teacher = class extends User { //eslint-disable-line
 
@@ -71,31 +87,31 @@ const Teacher = class extends User { //eslint-disable-line
         super(name, surname, bYear);
         this.groups = [];
         this.activeGroups = [];
+    }
 
-        this.addNewGroup = nameGroup => {
-            this.groups.push({
-                name: nameGroup,
-                status: true,
-            });
-            this.activeGroups.push(nameGroup);
-            return this.groups;
-        };
+    addNewGroup(nameGroup) {
+        this.groups.push({
+            name: nameGroup,
+            status: true,
+        });
+        this.activeGroups.push(nameGroup);
+        return this.groups;
+    }
 
-        this.changeGroupStatus = nameGroup => {
-            let thisGroup;
-            const indexGroup = this.activeGroups.findIndex(i => i === nameGroup);
-            this.groups.forEach(group => {
-                if (group.name === nameGroup) {
-                    group.status = !group.status;
-                    thisGroup = group;
-                    if (group.status === false) {
-                        this.activeGroups.splice(indexGroup, 1);  
-                    } else {
-                        this.activeGroups.push(nameGroup);
-                    }
+    changeGroupStatus(nameGroup) {
+        let changeGroup;
+        const indexGroup = this.activeGroups.findIndex(i => i === nameGroup);
+        this.groups.forEach(group => {
+            if (group.name === nameGroup) {
+                group.status = !group.status;
+                changeGroup = group;
+                if (group.status === false) {
+                    this.activeGroups.splice(indexGroup, 1); //eslint-disable-line
+                } else {
+                    this.activeGroups.push(nameGroup);
                 }
-            });
-            return thisGroup;
-        };
+            }
+        });
+        return changeGroup;
     }
 };
